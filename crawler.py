@@ -66,14 +66,6 @@ class SecCrawler(object):
             # List of document doc_names
             doc_names = [url.split("/")[-1] for url in urls]
 
-        elif doc_type == 'xbrl':
-            urls, doc_names = [], []
-            for link in link_list:
-                xbrl_url, doc_name = self._find_xbrl_link(link)
-                if xbrl_url is not None:
-                    urls.append(xbrl_url)
-                    doc_names.append(doc_name)
-
         print("Number of files to download: {0}".format(len(doc_names)))
         print("Starting download...")
         return list(zip(urls, doc_names))
