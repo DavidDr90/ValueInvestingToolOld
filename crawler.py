@@ -1,6 +1,6 @@
 # The Crawler can search and dowload 10-K, 10-Q and 20-F reports
 # provided that of company symbol and its cik code.
-# shamelessly borrowed some chunks of code from https://github.com/coyo8/sec-edgar 
+# shamelessly borrowed some chunks of code from https://github.com/coyo8/sec-edgar
 
 import requests
 import os
@@ -52,6 +52,29 @@ class SecCrawler(object):
             for item in link_list:
                 f.write("%s\n" % item)
 
+    def _find_xbrl_link(self, base_url):
+        with requests.get(base_url) as r:
+            data = r.text
+        soup = BeautifulSoup(data, features='html.parser')
+        # store the link in the list
+        link_list = [link.string for link in soup.find_all('a')]
+        regex = re.compile('.*[0-9].xml')
+        regex2 = re.compile('.*htm.xml')
+        file_name, file_url = None, None
+        for link in link_list:
+            if link is not None and regex.match(link):
+                file_name = link
+                # replace last part of the link with the xml file name
+                file_url = '/'.join(base_url.split('/')[:-1] + [link])
+                break
+            if link is not None and regex2.match(link):
+                file_name = link
+                # replace last part of the link with the xml file name
+                file_url = '/'.join(base_url.split('/')[:-1] + [link])
+                break
+        # set_trace()
+        return file_url, file_name
+
     def _create_document_list(self, data, doc_type='txt'):
         # parse fetched data using beatifulsoup
         # Explicit parser needed
@@ -66,12 +89,19 @@ class SecCrawler(object):
             # List of document doc_names
             doc_names = [url.split("/")[-1] for url in urls]
 
+        elif doc_type == 'xbrl':
+            urls, doc_names = [], []
+            for link in link_list:
+                xbrl_url, doc_name = self._find_xbrl_link(link)
+                if xbrl_url is not None:
+                    urls.append(xbrl_url)
+                    doc_names.append(doc_name)
+
         print("Number of files to download: {0}".format(len(doc_names)))
         print("Starting download...")
         return list(zip(urls, doc_names))
 
     def _fetch_report(self, ticker, cik, company_name, priorto, count, filing_type, doc_type='txt'):
-        priorto = priorto.strftime("%Y%m%d")
         self._make_directory(ticker, priorto, filing_type)
 
         # generate the url to crawl
