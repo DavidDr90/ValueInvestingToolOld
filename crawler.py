@@ -75,7 +75,7 @@ class SecCrawler(object):
         # set_trace()
         return file_url, file_name
 
-    def _create_document_list(self, data, doc_type='txt'):
+    def _create_document_list(self, data, doc_format='txt'):
         # parse fetched data using beatifulsoup
         # Explicit parser needed
         soup = BeautifulSoup(data, features='html.parser')
@@ -84,12 +84,12 @@ class SecCrawler(object):
         self._save_links_summary(link_list)
 
         # List of url to the text documents
-        if doc_type == 'txt':
+        if doc_format == 'txt':
             urls = [link[:link.rfind("-")] + ".txt" for link in link_list]
             # List of document doc_names
             doc_names = [url.split("/")[-1] for url in urls]
 
-        elif doc_type == 'xbrl':
+        elif doc_format == 'xbrl':
             urls, doc_names = [], []
             for link in link_list:
                 xbrl_url, doc_name = self._find_xbrl_link(link)
@@ -101,7 +101,7 @@ class SecCrawler(object):
         print("Starting download...")
         return list(zip(urls, doc_names))
 
-    def _fetch_report(self, ticker, cik, company_name, priorto, count, filing_type, doc_type='txt'):
+    def _fetch_report(self, ticker, cik, company_name, priorto, count, filing_type, doc_format='txt'):
         self._make_directory(ticker, priorto, filing_type)
 
         # generate the url to crawl
@@ -113,7 +113,7 @@ class SecCrawler(object):
             data = r.text
 
         # get doc list data
-        docs = self._create_document_list(data, doc_type)
+        docs = self._create_document_list(data, doc_format)
 
         try:
             self._save_in_directory(docs)
@@ -122,14 +122,14 @@ class SecCrawler(object):
 
         print("Successfully downloaded {0} files ".format(len(docs)))
 
-    def filing_10Q(self, ticker, cik, company_name, priorto, count, doc_type='txt'):
+    def filing_10Q(self, ticker, cik, company_name, priorto, count, doc_format='txt'):
         self._fetch_report(ticker, cik, company_name,
-                           priorto, count, '10-Q', doc_type)
+                           priorto, count, '10-Q', doc_format)
 
-    def filing_10K(self, ticker, cik, company_name, priorto, count, doc_type='txt'):
+    def filing_10K(self, ticker, cik, company_name, priorto, count, doc_format='txt'):
         self._fetch_report(ticker, cik, company_name,
-                           priorto, count, '10-K', doc_type)
+                           priorto, count, '10-K', doc_format)
 
-    def filing_20F(self, ticker, cik, company_name, priorto, count, doc_type='txt'):
+    def filing_20F(self, ticker, cik, company_name, priorto, count, doc_format='txt'):
         self._fetch_report(ticker, cik, company_name,
-                           priorto, count, '20-F', doc_type)
+                           priorto, count, '20-F', doc_format)

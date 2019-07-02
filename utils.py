@@ -4,31 +4,31 @@ import requests
 from datetime import datetime
 
 
-def find_and_save_10K_to_folder(ticker, from_date=None, number_of_documents=40, doc_type='xbrl'):
+def find_and_save_10K_to_folder(ticker, from_date=None, number_of_documents=40, doc_format='xbrl'):
     if from_date is None:
         from_date = datetime.today().strftime('%Y%m%d')
     crawler = SecCrawler()
     cik, company_name = get_cik_and_name_from_ticker(ticker)
     crawler.filing_10K(ticker, cik, company_name, from_date,
-                       number_of_documents, doc_type)
+                       number_of_documents, doc_format)
 
 
-def find_and_save_10Q_to_folder(ticker, from_date=None, number_of_documents=40, doc_type='xbrl'):
+def find_and_save_10Q_to_folder(ticker, from_date=None, number_of_documents=40, doc_format='xbrl'):
     if from_date is None:
         from_date = datetime.today().strftime('%Y%m%d')
     crawler = SecCrawler()
     cik, company_name = get_cik_and_name_from_ticker(ticker)
     crawler.filing_10Q(ticker, cik, company_name, from_date,
-                       number_of_documents, doc_type)
+                       number_of_documents, doc_format)
 
 
-def find_and_save_20F_to_folder(ticker, from_date=None, number_of_documents=40, doc_type='xbrl'):
+def find_and_save_20F_to_folder(ticker, from_date=None, number_of_documents=40, doc_format='xbrl'):
     if from_date is None:
         from_date = datetime.today().strftime('%Y%m%d')
     crawler = SecCrawler()
     cik, company_name = get_cik_and_name_from_ticker(ticker)
     crawler.filing_20F(ticker, cik, company_name, from_date,
-                       number_of_documents, doc_type)
+                       number_of_documents, doc_format)
 
 
 def get_cik_and_name_from_ticker(ticker):
