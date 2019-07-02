@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# IDE
+.vscode
+
+# Dowloaded data files
+SEC-Edgar-Data/*
