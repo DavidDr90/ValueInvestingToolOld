@@ -1,15 +1,15 @@
 import argparse
 
-from utils import find_and_save_10K_to_folder, find_and_save_10Q_to_folder, find_and_save_20F_to_folder
+from utils import find_and_save_all_reports
 
 parser = argparse.ArgumentParser(description='Description of optional arguments')
 parser.add_argument('--ticker', '-t', type=str,
                     help='The ticker of a certain company')
 parser.add_argument('--n_documents', '-n', type=int, default=40,
                     help='number of documents to download')
-parser.add_argument('--txt', action='store_true',
+parser.add_argument('--txt', '-txt', action='store_true',
                     help='Set downloaded reports type as .txt')
-parser.add_argument('--xbrl', action='store_true',
+parser.add_argument('--xbrl', '-xbrl', action='store_true',
                     help='Set downloaded reports type as .xbrl')
 parser.add_argument('--doc_10k', '-k', action='store_true',
                     help='download 10-K reports')
@@ -22,28 +22,14 @@ args = parser.parse_args()
 
 
 def main():
-    downloaded = False
     ticker = args.ticker
-    if args.xbrl:
-        doc_format = 'xbrl'
-    else:
-        doc_format = 'txt'
-    if args.doc_10k:
-        find_and_save_10K_to_folder(
-            ticker, number_of_documents=args.n_documents, doc_format=doc_format)
-        downloaded = True
-    if args.doc_10q:
-        find_and_save_10Q_to_folder(
-            ticker, number_of_documents=args.n_documents, doc_format=doc_format)
-        downloaded = True
-    if args.doc_20f:
-        find_and_save_20F_to_folder(
-            ticker, number_of_documents=args.n_documents, doc_format=doc_format)
-        downloaded = True
-    if not downloaded:
-        print('Supported document types are "10-K", "10-Q", "20-F", you should add '
-              'one of the following arguments: "-k", "-q", "-f"')
-
+    n_documents = args.n_documents
+    xbrl = args.xbrl
+    txt = args.txt
+    doc_10k = args.doc_10k
+    doc_10q = args.doc_10q
+    doc_20f = args.doc_20f
+    find_and_save_all_reports(ticker, n_documents, txt, xbrl, doc_10k, doc_10q, doc_20f)
 
 if __name__ == "__main__":
     main()

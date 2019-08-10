@@ -55,3 +55,38 @@ def get_cik_and_name_from_ticker(ticker):
         name_find = None
 
     return cik_find, name_find
+
+
+def find_and_save_all_reports(ticker, n_documents=40, txt=False, xbrl=False, doc_10k=False, doc_10q=False, doc_20f=False):
+    downloaded = False
+    if xbrl:
+        if doc_10k:
+            find_and_save_10K_to_folder(
+                ticker, number_of_documents=n_documents, doc_format='xbrl')
+            downloaded = True
+        if doc_10q:
+            find_and_save_10Q_to_folder(
+                ticker, number_of_documents=n_documents, doc_format='xbrl')
+            downloaded = True
+        if doc_20f:
+            find_and_save_20F_to_folder(
+                ticker, number_of_documents=n_documents, doc_format='xbrl')
+            downloaded = True
+
+    if txt:
+        if doc_10k:
+            find_and_save_10K_to_folder(
+                ticker, number_of_documents=n_documents, doc_format='txt')
+            downloaded = True
+        if doc_10q:
+            find_and_save_10Q_to_folder(
+                ticker, number_of_documents=n_documents, doc_format='txt')
+            downloaded = True
+        if doc_20f:
+            find_and_save_20F_to_folder(
+                ticker, number_of_documents=n_documents, doc_format='txt')
+            downloaded = True
+
+    if not downloaded:
+        print('Supported document types are "10-K", "10-Q", "20-F", you should add '
+              'one of the following arguments: "-k", "-q", "-f"')
