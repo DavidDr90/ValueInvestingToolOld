@@ -1,5 +1,5 @@
-# sec-crawler
-use python to crawl through EDGAR SEC website and auto download financial reports
+# Value Investing Tool
+Use EDGAR SEC website to value stock price using python
 
 
-this repo is designed to function as a sub module in other financial projects. Please check out https://github.com/coyo8/sec-edgar, I have shamlessly borrowed some chunks of code from there, and modified it to fit my needs.
+This repo was fork from https://github.com/nirmorgo/sec-crawler
